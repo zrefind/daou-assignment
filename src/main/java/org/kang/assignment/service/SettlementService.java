@@ -3,8 +3,11 @@ package org.kang.assignment.service;
 import lombok.RequiredArgsConstructor;
 import org.kang.assignment.common.exception.CustomException;
 import org.kang.assignment.common.exception.ErrorCode;
+import org.kang.assignment.domain.settlement.Settlement;
 import org.kang.assignment.domain.settlement.SettlementRepository;
 import org.kang.assignment.util.Validator;
+import org.kang.assignment.web.dto.settlement.SettlementRequest;
+import org.kang.assignment.web.dto.settlement.SettlementResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,21 @@ public class SettlementService {
             default:
                 throw new CustomException(ErrorCode.INVALID_FACTOR);
         }
+    }
+
+    @Transactional
+    public SettlementResponse saveWithNewbies(SettlementRequest request) {
+        Validator.validateTime(request.getTime());
+        Validator.validatePositive(request.getNewbie());
+
+        if (settlementRepository.existsByTime(request.getTime()))
+            throw new CustomException(ErrorCode.DUPLICATED_SETTLEMENT);
+
+        Settlement settlement = request.toSettlementWithNewbie();
+        settlementRepository.save(settlement);
+
+        logger.info("success to save settlement with newbie: {}/{}", settlement.getTime(), settlement.getNewbie());
+        return SettlementResponse.done(settlement);
     }
 
 }

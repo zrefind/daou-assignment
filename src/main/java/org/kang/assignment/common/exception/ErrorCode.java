@@ -12,8 +12,10 @@ public enum ErrorCode {
 
     INVALID_FACTOR(HttpStatus.BAD_REQUEST, "invalid factor ..."),
     INVALID_PERIOD(HttpStatus.BAD_REQUEST, "invalid period ..."),
+    INVALID_TIME(HttpStatus.BAD_REQUEST, "invalid time ..."),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "invalid email ..."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "invalid password ..."),
+    NOT_POSITIVE(HttpStatus.BAD_REQUEST, "not positive number ..."),
 
     MISSING_REQUIRED(HttpStatus.BAD_REQUEST, "missing required ..."),
 
@@ -29,6 +31,8 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "member not found ..."),
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "duplicated member email ..."),
     DISCREPANT_PASSWORD(HttpStatus.FORBIDDEN, "discrepant password ..."),
+
+    DUPLICATED_SETTLEMENT(HttpStatus.CONFLICT, "duplicated settlement ..."),
     ;
 
     private final HttpStatus status;

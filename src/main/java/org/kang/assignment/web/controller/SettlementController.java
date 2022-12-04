@@ -6,13 +6,12 @@ import org.kang.assignment.common.exception.CustomException;
 import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.service.SettlementService;
 import org.kang.assignment.util.RateLimiter;
+import org.kang.assignment.web.dto.settlement.SettlementRequest;
+import org.kang.assignment.web.dto.settlement.SettlementResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +28,16 @@ public class SettlementController {
         if (bucket.tryConsume(1)) {
             logger.info("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.findByPeriod(factor, from, to));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
+    @PutMapping("/newbies")
+    public ResponseEntity<SettlementResponse> saveWithNewbies(@RequestBody SettlementRequest request) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.saveWithNewbies(request));
         }
 
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);

@@ -61,4 +61,15 @@ public class Settlement {
         );
     }
 
+    public static Settlement of(String time, Long newbie, Long bolter, Long payment, Long used, Long sales) {
+        return new Settlement(
+                LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyyMMddHH")),
+                newbie,
+                bolter,
+                payment,
+                used,
+                sales
+        );
+    }
+
 }

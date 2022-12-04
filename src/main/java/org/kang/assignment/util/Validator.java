@@ -24,6 +24,15 @@ public class Validator {
             throw new CustomException(ErrorCode.INVALID_PERIOD);
     }
 
+    public static void validateTime(String time) {
+        isValidString(PATTERN_PERIOD, time, ErrorCode.INVALID_TIME);
+    }
+
+    public static void validatePositive(Long number) {
+        if (number < 0L)
+            throw new CustomException(ErrorCode.NOT_POSITIVE);
+    }
+
     public static void validateEmail(String email) {
         isValidString(PATTERN_EMAIL, email, ErrorCode.INVALID_EMAIL);
     }

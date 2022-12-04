@@ -1,13 +1,19 @@
 package org.kang.assignment.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kang.assignment.TestUtil;
+import org.kang.assignment.common.enums.ResponseType;
+import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.domain.settlement.SettlementRepository;
+import org.kang.assignment.web.dto.settlement.SettlementRequest;
+import org.kang.assignment.web.dto.settlement.SettlementResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -15,9 +21,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +49,9 @@ public class SettlementControllerTest {
     private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
     private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
     private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
+    private final String saveNewbiesUri = baseUri + "/newbies";
+
+    private static final String TIME = "2022010100";
 
     @BeforeEach
     public void init() {
@@ -117,6 +128,43 @@ public class SettlementControllerTest {
 
         Long response = TestUtil.convert(mvcResult, Long.class);
         assertTrue(response > -1L);
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_가입자_수_입력")
+    public void saveNewbies() throws Exception {
+        SettlementRequest request = SettlementRequest.builder()
+                .time(TIME)
+                .newbie(10L)
+                .build();
+
+        MvcResult mvcResult = mvc.perform(put(saveNewbiesUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andReturn();
+
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
+        assertEquals(TIME, response.getTime().replace("-", "").replace(" ", ""));
+        assertEquals(10L, response.getNewbie());
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_가입자_수_입력__시간대_중복")
+    public void saveNewbies__duplicated() throws Exception {
+        SettlementRequest request = SettlementRequest.builder()
+                .time("2022113000")
+                .newbie(10L)
+                .build();
+
+        mvc.perform(put(saveNewbiesUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
     }
 
 }

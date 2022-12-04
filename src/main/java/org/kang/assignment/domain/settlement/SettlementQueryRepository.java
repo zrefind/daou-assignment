@@ -12,4 +12,6 @@ public interface SettlementQueryRepository {
 
     Long findSalesByPeriod(String from, String to);
 
+    boolean existsByTime(String time);
+
 }
