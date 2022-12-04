@@ -56,4 +56,19 @@ public class SettlementService {
         return SettlementResponse.done(settlement);
     }
 
+    @Transactional
+    public SettlementResponse saveWithBolters(SettlementRequest request) {
+        Validator.validateTime(request.getTime());
+        Validator.validatePositive(request.getBolter());
+
+        if (settlementRepository.existsByTime(request.getTime()))
+            throw new CustomException(ErrorCode.DUPLICATED_SETTLEMENT);
+
+        Settlement settlement = request.toSettlementWithBolter();
+        settlementRepository.save(settlement);
+
+        logger.info("success to save settlement with bolter: {}/{}", settlement.getTime(), settlement.getNewbie());
+        return SettlementResponse.done(settlement);
+    }
+
 }

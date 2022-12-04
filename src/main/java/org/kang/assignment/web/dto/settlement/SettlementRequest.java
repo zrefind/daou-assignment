@@ -20,4 +20,8 @@ public class SettlementRequest {
         return Settlement.of(time, newbie, 0L, 0L, 0L, 0L);
     }
 
+    public Settlement toSettlementWithBolter() {
+        return Settlement.of(time, 0L, bolter, 0L, 0L, 0L);
+    }
+
 }

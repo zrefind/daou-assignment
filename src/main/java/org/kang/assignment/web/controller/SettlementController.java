@@ -43,4 +43,14 @@ public class SettlementController {
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
+    @PutMapping("/bolters")
+    public ResponseEntity<SettlementResponse> saveWithBolters(@RequestBody SettlementRequest request) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.saveWithBolters(request));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
 }

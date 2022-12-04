@@ -49,7 +49,8 @@ public class SettlementControllerTest {
     private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
     private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
     private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
-    private final String saveNewbiesUri = baseUri + "/newbies";
+    private final String saveWithNewbiesUri = baseUri + "/newbies";
+    private final String saveWithBoltersUri = baseUri + "/bolters";
 
     private static final String TIME = "2022010100";
 
@@ -134,13 +135,13 @@ public class SettlementControllerTest {
     @WithUserDetails("admin@test.com")
     @Transactional
     @DisplayName("특정_시간대의_가입자_수_입력")
-    public void saveNewbies() throws Exception {
+    public void saveWithNewbies() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time(TIME)
                 .newbie(10L)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(put(saveNewbiesUri)
+        MvcResult mvcResult = mvc.perform(put(saveWithNewbiesUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -155,13 +156,50 @@ public class SettlementControllerTest {
     @WithUserDetails("admin@test.com")
     @Transactional
     @DisplayName("특정_시간대의_가입자_수_입력__시간대_중복")
-    public void saveNewbies__duplicated() throws Exception {
+    public void saveWithNewbies__duplicated() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time("2022113000")
                 .newbie(10L)
                 .build();
 
-        mvc.perform(put(saveNewbiesUri)
+        mvc.perform(put(saveWithNewbiesUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_탈퇴자_수_입력")
+    public void saveWithBolters() throws Exception {
+        SettlementRequest request = SettlementRequest.builder()
+                .time(TIME)
+                .bolter(10L)
+                .build();
+
+        MvcResult mvcResult = mvc.perform(put(saveWithBoltersUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andReturn();
+
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
+        assertEquals(TIME, response.getTime().replace("-", "").replace(" ", ""));
+        assertEquals(10L, response.getBolter());
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_탈퇴자_수_입력__시간대_중복")
+    public void saveWithBolters__duplicated() throws Exception {
+        SettlementRequest request = SettlementRequest.builder()
+                .time("2022113000")
+                .bolter(10L)
+                .build();
+
+        mvc.perform(put(saveWithBoltersUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
