@@ -28,9 +28,13 @@ public class Validator {
         isValidString(PATTERN_PERIOD, time, ErrorCode.INVALID_TIME);
     }
 
-    public static void validatePositive(Long number) {
-        if (number < 0L)
-            throw new CustomException(ErrorCode.NOT_POSITIVE);
+    public static void ifNonNullValidatePositive(Long... numbers) {
+        for (Long number : numbers) {
+            if (number == null)
+                continue;
+            if (number < 0L)
+                throw new CustomException(ErrorCode.NOT_POSITIVE);
+        }
     }
 
     public static void validateEmail(String email) {

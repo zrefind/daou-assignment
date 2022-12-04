@@ -42,32 +42,17 @@ public class SettlementService {
     }
 
     @Transactional
-    public SettlementResponse saveWithNewbies(SettlementRequest request) {
+    public SettlementResponse enroll(SettlementRequest request) {
         Validator.validateTime(request.getTime());
-        Validator.validatePositive(request.getNewbie());
+        Validator.ifNonNullValidatePositive(request.getNewbie(), request.getBolter(), request.getPayment(), request.getUsed(), request.getSales());
 
         if (settlementRepository.existsByTime(request.getTime()))
             throw new CustomException(ErrorCode.DUPLICATED_SETTLEMENT);
 
-        Settlement settlement = request.toSettlementWithNewbie();
+        Settlement settlement = request.toSettlement();
         settlementRepository.save(settlement);
 
-        logger.info("success to save settlement with newbie: {}/{}", settlement.getTime(), settlement.getNewbie());
-        return SettlementResponse.done(settlement);
-    }
-
-    @Transactional
-    public SettlementResponse saveWithBolters(SettlementRequest request) {
-        Validator.validateTime(request.getTime());
-        Validator.validatePositive(request.getBolter());
-
-        if (settlementRepository.existsByTime(request.getTime()))
-            throw new CustomException(ErrorCode.DUPLICATED_SETTLEMENT);
-
-        Settlement settlement = request.toSettlementWithBolter();
-        settlementRepository.save(settlement);
-
-        logger.info("success to save settlement with bolter: {}/{}", settlement.getTime(), settlement.getNewbie());
+        logger.info("success to save settlement: {}", settlement.getTime());
         return SettlementResponse.done(settlement);
     }
 

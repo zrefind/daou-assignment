@@ -21,11 +21,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +48,7 @@ public class SettlementControllerTest {
     private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
     private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
     private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
+    private final String enrollUri = baseUri + "/enroll";
     private final String saveWithNewbiesUri = baseUri + "/newbies";
     private final String saveWithBoltersUri = baseUri + "/bolters";
 
@@ -134,14 +134,16 @@ public class SettlementControllerTest {
     @Test
     @WithUserDetails("admin@test.com")
     @Transactional
-    @DisplayName("특정_시간대의_가입자_수_입력")
-    public void saveWithNewbies() throws Exception {
+    @DisplayName("시간대별_각_항목_입력")
+    public void enroll() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time(TIME)
                 .newbie(10L)
+                .payment(22000L)
+                .sales(123000L)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(put(saveWithNewbiesUri)
+        MvcResult mvcResult = mvc.perform(post(enrollUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -150,56 +152,25 @@ public class SettlementControllerTest {
         assertEquals(ResponseType.DONE, response.getResponseType());
         assertEquals(TIME, response.getTime().replace("-", "").replace(" ", ""));
         assertEquals(10L, response.getNewbie());
+        assertNull(response.getBolter());
+        assertEquals(22000L, response.getPayment());
+        assertNull(response.getUsed());
+        assertEquals(123000L, response.getSales());
     }
 
     @Test
     @WithUserDetails("admin@test.com")
     @Transactional
-    @DisplayName("특정_시간대의_가입자_수_입력__시간대_중복")
-    public void saveWithNewbies__duplicated() throws Exception {
+    @DisplayName("시간대별_각_항목_입력__시간대_중복")
+    public void enroll__duplicated() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time("2022113000")
                 .newbie(10L)
+                .payment(22000L)
+                .sales(123000L)
                 .build();
 
-        mvc.perform(put(saveWithNewbiesUri)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
-    }
-
-    @Test
-    @WithUserDetails("admin@test.com")
-    @Transactional
-    @DisplayName("특정_시간대의_탈퇴자_수_입력")
-    public void saveWithBolters() throws Exception {
-        SettlementRequest request = SettlementRequest.builder()
-                .time(TIME)
-                .bolter(10L)
-                .build();
-
-        MvcResult mvcResult = mvc.perform(put(saveWithBoltersUri)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andReturn();
-
-        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
-        assertEquals(ResponseType.DONE, response.getResponseType());
-        assertEquals(TIME, response.getTime().replace("-", "").replace(" ", ""));
-        assertEquals(10L, response.getBolter());
-    }
-
-    @Test
-    @WithUserDetails("admin@test.com")
-    @Transactional
-    @DisplayName("특정_시간대의_탈퇴자_수_입력__시간대_중복")
-    public void saveWithBolters__duplicated() throws Exception {
-        SettlementRequest request = SettlementRequest.builder()
-                .time("2022113000")
-                .bolter(10L)
-                .build();
-
-        mvc.perform(put(saveWithBoltersUri)
+        mvc.perform(post(enrollUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));

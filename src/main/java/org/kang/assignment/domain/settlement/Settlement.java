@@ -26,19 +26,19 @@ public class Settlement {
     @Column(nullable = false)
     private LocalDateTime time;
 
-    @Column(nullable = false)
+    @Column
     private Long newbie;
 
-    @Column(nullable = false)
+    @Column
     private Long bolter;
 
-    @Column(nullable = false)
+    @Column
     private Long payment;
 
-    @Column(nullable = false)
+    @Column
     private Long used;
 
-    @Column(nullable = false)
+    @Column
     private Long sales;
 
     private Settlement(LocalDateTime time, Long newbie, Long bolter, Long payment, Long used, Long sales) {

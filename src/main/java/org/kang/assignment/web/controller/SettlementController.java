@@ -33,21 +33,11 @@ public class SettlementController {
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
-    @PutMapping("/newbies")
-    public ResponseEntity<SettlementResponse> saveWithNewbies(@RequestBody SettlementRequest request) {
+    @PostMapping("/enroll")
+    public ResponseEntity<SettlementResponse> enroll(@RequestBody SettlementRequest request) {
         if (bucket.tryConsume(1)) {
             logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.saveWithNewbies(request));
-        }
-
-        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
-    }
-
-    @PutMapping("/bolters")
-    public ResponseEntity<SettlementResponse> saveWithBolters(@RequestBody SettlementRequest request) {
-        if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.saveWithBolters(request));
+            return ResponseEntity.ok(settlementService.enroll(request));
         }
 
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
