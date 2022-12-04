@@ -36,11 +36,11 @@ public class SettlementControllerTest {
     private MockMvc mvc;
 
     private final String baseUri = "http://localhost:" + port + "/api/settlement";
-    private final String findNewbieByPeriodUri = baseUri + "/newbie/2022113001/2022113010";
-    private final String findBolterByPeriodUri = baseUri + "/bolter/2022113001/2022113010";
-    private final String findPaymentByPeriodUri = baseUri + "/payment/2022113001/2022113010";
-    private final String findUsedByPeriodUri = baseUri + "/used/2022113001/2022113010";
-    private final String findSalesByPeriodUri = baseUri + "/sales/2022113001/2022113010";
+    private final String findNewbieByPeriodUri = baseUri + "/search/newbie/2022113001/2022113010";
+    private final String findBolterByPeriodUri = baseUri + "/search/bolter/2022113001/2022113010";
+    private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
+    private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
+    private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
 
     @BeforeEach
     public void init() {

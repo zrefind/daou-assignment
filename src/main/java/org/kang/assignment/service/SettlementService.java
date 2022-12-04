@@ -1,6 +1,8 @@
 package org.kang.assignment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.kang.assignment.common.exception.CustomException;
+import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.domain.settlement.SettlementRepository;
 import org.kang.assignment.util.Validator;
 import org.slf4j.Logger;
@@ -17,33 +19,23 @@ public class SettlementService {
     private final SettlementRepository settlementRepository;
 
     @Transactional(readOnly = true)
-    public Long findNewbieByPeriod(String from, String to) {
+    public Long findByPeriod(String factor, String from, String to) {
         Validator.validatePeriod(from, to);
-        return settlementRepository.findNewbieByPeriod(from, to);
-    }
 
-    @Transactional(readOnly = true)
-    public Long findBolterByPeriod(String from, String to) {
-        Validator.validatePeriod(from, to);
-        return settlementRepository.findBolterByPeriod(from, to);
-    }
-
-    @Transactional(readOnly = true)
-    public Long findPaymentByPeriod(String from, String to) {
-        Validator.validatePeriod(from, to);
-        return settlementRepository.findPaymentByPeriod(from, to);
-    }
-
-    @Transactional(readOnly = true)
-    public Long findUsedByPeriod(String from, String to) {
-        Validator.validatePeriod(from, to);
-        return settlementRepository.findUsedByPeriod(from, to);
-    }
-
-    @Transactional(readOnly = true)
-    public Long findSalesByPeriod(String from, String to) {
-        Validator.validatePeriod(from, to);
-        return settlementRepository.findSalesByPeriod(from, to);
+        switch (factor) {
+            case "newbie":
+                return settlementRepository.findNewbieByPeriod(from, to);
+            case "bolter":
+                return settlementRepository.findBolterByPeriod(from, to);
+            case "payment":
+                return settlementRepository.findPaymentByPeriod(from, to);
+            case "used":
+                return settlementRepository.findUsedByPeriod(from, to);
+            case "sales":
+                return settlementRepository.findSalesByPeriod(from, to);
+            default:
+                throw new CustomException(ErrorCode.INVALID_FACTOR);
+        }
     }
 
 }

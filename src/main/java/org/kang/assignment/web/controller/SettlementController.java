@@ -24,51 +24,11 @@ public class SettlementController {
     private final Bucket bucket = RateLimiter.generateSimpleBucket();
     private final SettlementService settlementService;
 
-    @GetMapping("/newbie/{from}/{to}")
-    public ResponseEntity<Long> findNewbieByPeriod(@PathVariable String from, @PathVariable String to) {
+    @GetMapping("/search/{factor}/{from}/{to}")
+    public ResponseEntity<Long> findByPeriod(@PathVariable String factor, @PathVariable String from, @PathVariable String to) {
         if (bucket.tryConsume(1)) {
             logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.findNewbieByPeriod(from, to));
-        }
-
-        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
-    }
-
-    @GetMapping("/bolter/{from}/{to}")
-    public ResponseEntity<Long> findBolterByPeriod(@PathVariable String from, @PathVariable String to) {
-        if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.findBolterByPeriod(from, to));
-        }
-
-        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
-    }
-
-    @GetMapping("/payment/{from}/{to}")
-    public ResponseEntity<Long> findPaymentByPeriod(@PathVariable String from, @PathVariable String to) {
-        if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.findPaymentByPeriod(from, to));
-        }
-
-        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
-    }
-
-    @GetMapping("/used/{from}/{to}")
-    public ResponseEntity<Long> findUsedByPeriod(@PathVariable String from, @PathVariable String to) {
-        if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.findUsedByPeriod(from, to));
-        }
-
-        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
-    }
-
-    @GetMapping("/sales/{from}/{to}")
-    public ResponseEntity<Long> findSalesByPeriod(@PathVariable String from, @PathVariable String to) {
-        if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.findSalesByPeriod(from, to));
+            return ResponseEntity.ok(settlementService.findByPeriod(factor, from, to));
         }
 
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
