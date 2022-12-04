@@ -33,11 +33,11 @@ public class SettlementController {
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
-    @PostMapping("/enroll")
-    public ResponseEntity<SettlementResponse> enroll(@RequestBody SettlementRequest request) {
+    @PostMapping("/enrollment")
+    public ResponseEntity<SettlementResponse> enrollment(@RequestBody SettlementRequest request) {
         if (bucket.tryConsume(1)) {
             logger.info("bucket remains: {}", bucket.getAvailableTokens());
-            return ResponseEntity.ok(settlementService.enroll(request));
+            return ResponseEntity.ok(settlementService.enrollment(request));
         }
 
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);

@@ -42,7 +42,7 @@ public class SettlementService {
     }
 
     @Transactional
-    public SettlementResponse enroll(SettlementRequest request) {
+    public SettlementResponse enrollment(SettlementRequest request) {
         Validator.validateTime(request.getTime());
         Validator.ifNonNullValidatePositive(request.getNewbie(), request.getBolter(), request.getPayment(), request.getUsed(), request.getSales());
 

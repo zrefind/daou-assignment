@@ -48,9 +48,7 @@ public class SettlementControllerTest {
     private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
     private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
     private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
-    private final String enrollUri = baseUri + "/enroll";
-    private final String saveWithNewbiesUri = baseUri + "/newbies";
-    private final String saveWithBoltersUri = baseUri + "/bolters";
+    private final String enrollmentUri = baseUri + "/enrollment";
 
     private static final String TIME = "2022010100";
 
@@ -135,7 +133,7 @@ public class SettlementControllerTest {
     @WithUserDetails("admin@test.com")
     @Transactional
     @DisplayName("시간대별_각_항목_입력")
-    public void enroll() throws Exception {
+    public void enrollment() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time(TIME)
                 .newbie(10L)
@@ -143,7 +141,7 @@ public class SettlementControllerTest {
                 .sales(123000L)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(post(enrollUri)
+        MvcResult mvcResult = mvc.perform(post(enrollmentUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -162,7 +160,7 @@ public class SettlementControllerTest {
     @WithUserDetails("admin@test.com")
     @Transactional
     @DisplayName("시간대별_각_항목_입력__시간대_중복")
-    public void enroll__duplicated() throws Exception {
+    public void enrollment__duplicated() throws Exception {
         SettlementRequest request = SettlementRequest.builder()
                 .time("2022113000")
                 .newbie(10L)
@@ -170,7 +168,7 @@ public class SettlementControllerTest {
                 .sales(123000L)
                 .build();
 
-        mvc.perform(post(enrollUri)
+        mvc.perform(post(enrollmentUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
