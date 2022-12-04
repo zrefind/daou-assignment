@@ -55,4 +55,62 @@ public class ValidatorTest {
         }
     }
 
+    @Test
+    @DisplayName("이메일_검증")
+    public void validateEmail() {
+        String email01 = "test@test.com";
+        String email02 = ".test@test.com";
+        String email03 = "test.com";
+        String email04 = "test@test.com.";
+
+        Validator.validateEmail(email01);
+
+        try {
+            Validator.validateEmail(email02);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_EMAIL, e.getErrorCode());
+        }
+
+        try {
+            Validator.validateEmail(email03);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_EMAIL, e.getErrorCode());
+        }
+
+        try {
+            Validator.validateEmail(email04);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_EMAIL, e.getErrorCode());
+        }
+    }
+
+    @Test
+    @DisplayName("비밀번호_검증")
+    public void validatePassword() {
+        String password01 = "1q2w3e4r!";
+        String password02 = "1q2w3e4r";
+        String password03 = "1";
+        String password04 = "01234567890123!";
+
+        Validator.validatePassword(password01);
+
+        try {
+            Validator.validatePassword(password02);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_PASSWORD, e.getErrorCode());
+        }
+
+        try {
+            Validator.validatePassword(password03);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_PASSWORD, e.getErrorCode());
+        }
+
+        try {
+            Validator.validatePassword(password04);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.INVALID_PASSWORD, e.getErrorCode());
+        }
+    }
+
 }
