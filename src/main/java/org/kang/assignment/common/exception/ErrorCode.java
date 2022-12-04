@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    TEMP(HttpStatus.NOT_FOUND, "not found"),
+    BUCKET_HAS_EXHAUSTED(HttpStatus.TOO_MANY_REQUESTS, "bucket has exhausted ..."),
 
     INVALID_FACTOR(HttpStatus.BAD_REQUEST, "invalid factor ..."),
     INVALID_PERIOD(HttpStatus.BAD_REQUEST, "invalid period ..."),

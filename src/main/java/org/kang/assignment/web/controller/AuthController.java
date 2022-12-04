@@ -1,11 +1,17 @@
 package org.kang.assignment.web.controller;
 
+import io.github.bucket4j.Bucket;
 import lombok.RequiredArgsConstructor;
 import org.kang.assignment.common.Constants;
+import org.kang.assignment.common.exception.CustomException;
+import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.common.jwt.Jwt;
 import org.kang.assignment.service.AuthService;
+import org.kang.assignment.util.RateLimiter;
 import org.kang.assignment.web.dto.auth.AuthRequest;
 import org.kang.assignment.web.dto.auth.AuthResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,19 +26,33 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+    private final Bucket bucket = RateLimiter.generateSimpleBucket();
     private final AuthService authService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<AuthResponse> signUp(@RequestBody AuthRequest request) {
-        return ResponseEntity.ok(authService.signUp(request));
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(authService.signUp(request));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
     @PostMapping("/sign-in")
     public ResponseEntity<AuthResponse> signIn(@RequestBody AuthRequest request, HttpServletResponse response) {
-        AuthResponse authResponse = authService.signIn(request);
-        responseJwtCookies(authResponse.getJwt(), response);
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
 
-        return ResponseEntity.ok(AuthResponse.done(authResponse.getEmail()));
+            AuthResponse authResponse = authService.signIn(request);
+            responseJwtCookies(authResponse.getJwt(), response);
+
+            return ResponseEntity.ok(AuthResponse.done(authResponse.getEmail()));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
     private static void responseJwtCookies(Jwt jwt, HttpServletResponse response) {
