@@ -15,10 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,6 +38,9 @@ public class SettlementControllerTest {
     private final String baseUri = "http://localhost:" + port + "/api/settlement";
     private final String findNewbieByPeriodUri = baseUri + "/newbie/2022113001/2022113010";
     private final String findBolterByPeriodUri = baseUri + "/bolter/2022113001/2022113010";
+    private final String findPaymentByPeriodUri = baseUri + "/payment/2022113001/2022113010";
+    private final String findUsedByPeriodUri = baseUri + "/used/2022113001/2022113010";
+    private final String findSalesByPeriodUri = baseUri + "/sales/2022113001/2022113010";
 
     @BeforeEach
     public void init() {
@@ -70,6 +69,48 @@ public class SettlementControllerTest {
     @DisplayName("시간대별_탈퇴자_수_조회")
     public void findBolterByPeriod() throws Exception {
         MvcResult mvcResult = mvc.perform(get(findBolterByPeriodUri))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Long response = TestUtil.convert(mvcResult, Long.class);
+        assertTrue(response > -1L);
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional(readOnly = true)
+    @DisplayName("시간대별_결제_금액_조회")
+    public void findPaymentByPeriod() throws Exception {
+        MvcResult mvcResult = mvc.perform(get(findPaymentByPeriodUri))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Long response = TestUtil.convert(mvcResult, Long.class);
+        assertTrue(response > -1L);
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional(readOnly = true)
+    @DisplayName("시간대별_사용_금액_조회")
+    public void findUsedByPeriod() throws Exception {
+        MvcResult mvcResult = mvc.perform(get(findUsedByPeriodUri))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Long response = TestUtil.convert(mvcResult, Long.class);
+        assertTrue(response > -1L);
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional(readOnly = true)
+    @DisplayName("시간대별_매출_금액_조회")
+    public void findSalesByPeriod() throws Exception {
+        MvcResult mvcResult = mvc.perform(get(findSalesByPeriodUri))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();

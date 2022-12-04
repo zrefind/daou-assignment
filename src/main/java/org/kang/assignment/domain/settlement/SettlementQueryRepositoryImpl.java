@@ -37,4 +37,37 @@ public class SettlementQueryRepositoryImpl implements SettlementQueryRepository 
                 .fetchOne();
     }
 
+    @Override
+    public Long findPaymentByPeriod(String from, String to) {
+        return queryFactory.select(settlement.payment.sum())
+                .from(settlement)
+                .where(settlement.time.between(
+                        LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHH")),
+                        LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                ))
+                .fetchOne();
+    }
+
+    @Override
+    public Long findUsedByPeriod(String from, String to) {
+        return queryFactory.select(settlement.used.sum())
+                .from(settlement)
+                .where(settlement.time.between(
+                        LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHH")),
+                        LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                ))
+                .fetchOne();
+    }
+
+    @Override
+    public Long findSalesByPeriod(String from, String to) {
+        return queryFactory.select(settlement.sales.sum())
+                .from(settlement)
+                .where(settlement.time.between(
+                        LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHH")),
+                        LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                ))
+                .fetchOne();
+    }
+
 }

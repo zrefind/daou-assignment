@@ -28,4 +28,22 @@ public class SettlementService {
         return settlementRepository.findBolterByPeriod(from, to);
     }
 
+    @Transactional(readOnly = true)
+    public Long findPaymentByPeriod(String from, String to) {
+        Validator.validatePeriod(from, to);
+        return settlementRepository.findPaymentByPeriod(from, to);
+    }
+
+    @Transactional(readOnly = true)
+    public Long findUsedByPeriod(String from, String to) {
+        Validator.validatePeriod(from, to);
+        return settlementRepository.findUsedByPeriod(from, to);
+    }
+
+    @Transactional(readOnly = true)
+    public Long findSalesByPeriod(String from, String to) {
+        Validator.validatePeriod(from, to);
+        return settlementRepository.findSalesByPeriod(from, to);
+    }
+
 }

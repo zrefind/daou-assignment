@@ -44,4 +44,34 @@ public class SettlementController {
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
+    @GetMapping("/payment/{from}/{to}")
+    public ResponseEntity<Long> findPaymentByPeriod(@PathVariable String from, @PathVariable String to) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.findPaymentByPeriod(from, to));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
+    @GetMapping("/used/{from}/{to}")
+    public ResponseEntity<Long> findUsedByPeriod(@PathVariable String from, @PathVariable String to) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.findUsedByPeriod(from, to));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
+    @GetMapping("/sales/{from}/{to}")
+    public ResponseEntity<Long> findSalesByPeriod(@PathVariable String from, @PathVariable String to) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.findSalesByPeriod(from, to));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
 }
