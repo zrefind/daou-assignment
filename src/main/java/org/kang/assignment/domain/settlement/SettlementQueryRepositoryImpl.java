@@ -26,4 +26,15 @@ public class SettlementQueryRepositoryImpl implements SettlementQueryRepository 
                 .fetchOne();
     }
 
+    @Override
+    public Long findBolterByPeriod(String from, String to) {
+        return queryFactory.select(settlement.bolter.sum())
+                .from(settlement)
+                .where(settlement.time.between(
+                        LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHH")),
+                        LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                ))
+                .fetchOne();
+    }
+
 }

@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RequiredArgsConstructor
 @Service
 public class SettlementService {
@@ -20,9 +17,15 @@ public class SettlementService {
     private final SettlementRepository settlementRepository;
 
     @Transactional(readOnly = true)
-    public Map<String, Long> findNewbieByPeriod(String from, String to) {
+    public Long findNewbieByPeriod(String from, String to) {
         Validator.validatePeriod(from, to);
-        return new HashMap<String, Long>() {{ put("newbie", settlementRepository.findNewbieByPeriod(from, to)); }};
+        return settlementRepository.findNewbieByPeriod(from, to);
+    }
+
+    @Transactional(readOnly = true)
+    public Long findBolterByPeriod(String from, String to) {
+        Validator.validatePeriod(from, to);
+        return settlementRepository.findBolterByPeriod(from, to);
     }
 
 }

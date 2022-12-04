@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SettlementControllerTest {
@@ -39,6 +41,7 @@ public class SettlementControllerTest {
 
     private final String baseUri = "http://localhost:" + port + "/api/settlement";
     private final String findNewbieByPeriodUri = baseUri + "/newbie/2022113001/2022113010";
+    private final String findBolterByPeriodUri = baseUri + "/bolter/2022113001/2022113010";
 
     @BeforeEach
     public void init() {
@@ -52,11 +55,27 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_가입자_수_조회")
     public void findNewbieByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findNewbieByPeriodUri)).andReturn();
+        MvcResult mvcResult = mvc.perform(get(findNewbieByPeriodUri))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
 
-        Map<String, Long> responseMap = TestUtil.convert(mvcResult, HashMap.class);
-        assertTrue(responseMap.containsKey("newbie"));
-        assertInstanceOf(Number.class, responseMap.get("newbie"));
+        Long response = TestUtil.convert(mvcResult, Long.class);
+        assertTrue(response > -1L);
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional(readOnly = true)
+    @DisplayName("시간대별_탈퇴자_수_조회")
+    public void findBolterByPeriod() throws Exception {
+        MvcResult mvcResult = mvc.perform(get(findBolterByPeriodUri))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Long response = TestUtil.convert(mvcResult, Long.class);
+        assertTrue(response > -1L);
     }
 
 }

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/settlement")
@@ -27,10 +25,20 @@ public class SettlementController {
     private final SettlementService settlementService;
 
     @GetMapping("/newbie/{from}/{to}")
-    public ResponseEntity<Map<String, Long>> findNewbieByPeriod(@PathVariable String from, @PathVariable String to) {
+    public ResponseEntity<Long> findNewbieByPeriod(@PathVariable String from, @PathVariable String to) {
         if (bucket.tryConsume(1)) {
             logger.info("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.findNewbieByPeriod(from, to));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
+    @GetMapping("/bolter/{from}/{to}")
+    public ResponseEntity<Long> findBolterByPeriod(@PathVariable String from, @PathVariable String to) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.findBolterByPeriod(from, to));
         }
 
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
