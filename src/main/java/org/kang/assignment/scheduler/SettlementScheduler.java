@@ -1,6 +1,8 @@
 package org.kang.assignment.scheduler;
 
 import lombok.RequiredArgsConstructor;
+import org.kang.assignment.common.exception.CustomException;
+import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.service.scheduler.SettlementSchedulerService;
 import org.kang.assignment.util.SettlementParser;
 import org.slf4j.Logger;
@@ -16,9 +18,7 @@ import java.io.File;
 public class SettlementScheduler {
 
     private static final Logger logger = LoggerFactory.getLogger(SettlementScheduler.class);
-
-    // FIXME: 개발 완료 시 자정마다 동작하도록 변경 필요
-    private static final String CRON_EXP = "0/30 * * * * ?";
+    private static final String CRON_EXP = "0 0 0 * * *";
 
     private final SettlementSchedulerService settlementSchedulerService;
 
@@ -32,7 +32,7 @@ public class SettlementScheduler {
     public void fileToDbScheduler() {
         File file = new File(targetDir, targetFile);
         if (!file.canRead()) {
-            throw new RuntimeException("can not read file");
+            throw new CustomException(ErrorCode.CAN_NOT_READ_FILE);
         }
 
         String ext = getExtension(file.getName());

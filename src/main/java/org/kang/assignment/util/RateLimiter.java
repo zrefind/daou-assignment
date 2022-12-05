@@ -7,7 +7,7 @@ import java.time.Duration;
 
 public class RateLimiter {
 
-    private static final int MAX_BANDWIDTH = 10;
+    private static final int MAX_BANDWIDTH = 30;
     private static final int MINUTES_TOKEN_REFILL = 1;
 
     public static Bucket generateSimpleBucket() {

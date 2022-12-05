@@ -3,6 +3,8 @@ package org.kang.assignment.util;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import org.kang.assignment.common.exception.CustomException;
+import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.domain.settlement.Settlement;
 
 import java.io.BufferedReader;
@@ -26,7 +28,7 @@ public class SettlementParser {
 
             return settlements;
         } catch (Exception e) {
-            throw new RuntimeException("txt err");
+            throw new CustomException(ErrorCode.INVALID_FILE);
         }
     }
 
@@ -41,7 +43,7 @@ public class SettlementParser {
 
             return settlements;
         } catch (Exception e) {
-            throw new RuntimeException("ERROR");
+            throw new CustomException(ErrorCode.INVALID_FILE);
         }
     }
 

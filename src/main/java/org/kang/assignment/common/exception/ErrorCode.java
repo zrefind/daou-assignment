@@ -9,15 +9,16 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     BUCKET_HAS_EXHAUSTED(HttpStatus.TOO_MANY_REQUESTS, "bucket has exhausted ..."),
+    MISSING_REQUIRED(HttpStatus.BAD_REQUEST, "missing required ..."),
+    CAN_NOT_READ_FILE(HttpStatus.BAD_REQUEST, "can not read file ..."),
 
     INVALID_FACTOR(HttpStatus.BAD_REQUEST, "invalid factor ..."),
     INVALID_PERIOD(HttpStatus.BAD_REQUEST, "invalid period ..."),
     INVALID_TIME(HttpStatus.BAD_REQUEST, "invalid time ..."),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "invalid email ..."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "invalid password ..."),
+    INVALID_FILE(HttpStatus.BAD_REQUEST, "invalid file ..."),
     NOT_POSITIVE(HttpStatus.BAD_REQUEST, "not positive number ..."),
-
-    MISSING_REQUIRED(HttpStatus.BAD_REQUEST, "missing required ..."),
 
     AUTHORITIES_KEY_IS_NULL(HttpStatus.UNAUTHORIZED, "authorities key is null ..."),
     MALFORMED_JWT(HttpStatus.FORBIDDEN, "malformed jwt ..."),
