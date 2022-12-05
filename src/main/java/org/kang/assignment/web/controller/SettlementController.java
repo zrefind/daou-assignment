@@ -53,4 +53,14 @@ public class SettlementController {
         throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
     }
 
+    @DeleteMapping("/elimination")
+    public ResponseEntity<SettlementResponse> elimination(@RequestBody SettlementRequest request) {
+        if (bucket.tryConsume(1)) {
+            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            return ResponseEntity.ok(settlementService.elimination(request));
+        }
+
+        throw new CustomException(ErrorCode.BUCKET_HAS_EXHAUSTED);
+    }
+
 }

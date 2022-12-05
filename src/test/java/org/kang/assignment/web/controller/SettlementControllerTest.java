@@ -23,6 +23,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,6 +54,7 @@ public class SettlementControllerTest {
     private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
     private final String enrollmentUri = baseUri + "/enrollment";
     private final String correctionUri = baseUri + "/correction";
+    private final String eliminationUri = baseUri + "/elimination";
 
     private static final String TIME = "2022010100";
 
@@ -233,6 +237,46 @@ public class SettlementControllerTest {
                 .build();
 
         mvc.perform(put(correctionUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.SETTLEMENT_NOT_FOUND));
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_결산_내역_삭제")
+    public void elimination() throws Exception {
+        Settlement settlement = settlementRepository.findByTime("2022113000")
+                .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_NOT_FOUND));
+
+        SettlementRequest request = SettlementRequest.builder()
+                .time("2022113000")
+                .build();
+
+        MvcResult mvcResult = mvc.perform(delete(eliminationUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andReturn();
+
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
+        assertEquals(settlement.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH")), response.getTime());
+
+        List<Settlement> settlements = settlementRepository.findAll();
+        assertFalse(settlements.contains(settlement));
+    }
+
+    @Test
+    @WithUserDetails("admin@test.com")
+    @Transactional
+    @DisplayName("특정_시간대의_결산_내역_삭제__엔티티_없음")
+    public void elimination__not_found() throws Exception {
+        SettlementRequest request = SettlementRequest.builder()
+                .time("2022103000")
+                .build();
+
+        mvc.perform(delete(eliminationUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.SETTLEMENT_NOT_FOUND));

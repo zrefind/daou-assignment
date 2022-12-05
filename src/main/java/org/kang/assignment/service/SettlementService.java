@@ -83,4 +83,17 @@ public class SettlementService {
         return SettlementResponse.done(settlement);
     }
 
+    @Transactional
+    public SettlementResponse elimination(SettlementRequest request) {
+        Validator.validateTime(request.getTime());
+
+        Settlement settlement = settlementRepository.findByTime(request.getTime())
+                .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_NOT_FOUND));
+
+        settlementRepository.delete(settlement);
+
+        logger.info("success to delete settlement: {}", settlement.getTime());
+        return SettlementResponse.done(settlement);
+    }
+
 }
