@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProperty name="LOG_DIR" source="log.config.dir" />
-    <property name="LOG_FILE" value="AssignmentApplication_%d{yyyyMMddHH}" />
-    <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}]-[%-5level]-%m%n" />
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <appender name="default" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <springProperty name="API_LOG_DIR" source="log.config.dir" />
+    <property name="API_LOG_FILE" value="AssignmentApplication_%d{yyyyMMddHH}" />
+    <property name="API_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}]-[%-5level]-%m%n" />
+    <property name="DEFAULT_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx" />
+
+    <appender name="API" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/${LOG_FILE}.log</fileNamePattern>
+            <fileNamePattern>${API_LOG_DIR}/${API_LOG_FILE}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
+            <pattern>${API_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <logger name="org.kang.assignment.web.controller" level="INFO">
-        <appender-ref ref="default" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.kang.assignment.web.controller" level="INFO" additivity="false">
+        <appender-ref ref="API" />
     </logger>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
 </configuration>
