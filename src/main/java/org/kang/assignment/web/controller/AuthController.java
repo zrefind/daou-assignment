@@ -34,7 +34,7 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ResponseEntity<AuthResponse> signUp(@RequestBody AuthRequest request) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(authService.signUp(request));
         }
 
@@ -44,7 +44,7 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<AuthResponse> signIn(@RequestBody AuthRequest request, HttpServletResponse response) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
 
             AuthResponse authResponse = authService.signIn(request);
             responseJwtCookies(authResponse.getJwt(), response);

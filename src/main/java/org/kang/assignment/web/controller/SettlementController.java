@@ -26,7 +26,7 @@ public class SettlementController {
     @GetMapping("/search/{factor}/{from}/{to}")
     public ResponseEntity<Long> findByPeriod(@PathVariable String factor, @PathVariable String from, @PathVariable String to) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.findByPeriod(factor, from, to));
         }
 
@@ -36,7 +36,7 @@ public class SettlementController {
     @PostMapping("/enrollment")
     public ResponseEntity<SettlementResponse> enrollment(@RequestBody SettlementRequest request) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.enrollment(request));
         }
 
@@ -46,7 +46,7 @@ public class SettlementController {
     @PutMapping("/correction")
     public ResponseEntity<SettlementResponse> correction(@RequestBody SettlementRequest request) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.correction(request));
         }
 
@@ -56,7 +56,7 @@ public class SettlementController {
     @DeleteMapping("/elimination")
     public ResponseEntity<SettlementResponse> elimination(@RequestBody SettlementRequest request) {
         if (bucket.tryConsume(1)) {
-            logger.info("bucket remains: {}", bucket.getAvailableTokens());
+            logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.elimination(request));
         }
 

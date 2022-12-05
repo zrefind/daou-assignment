@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="/Users/logs" />
-    <property name="LOG_FILE" value="%d{yyyyMMddHH}" />
+    <springProperty name="LOG_DIR" source="log.config.dir" />
+    <property name="LOG_FILE" value="AssignmentApplication_%d{yyyyMMddHH}" />
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}]-[%-5level]-%m%n" />
 
     <appender name="default" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE}.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/${LOG_FILE}.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
