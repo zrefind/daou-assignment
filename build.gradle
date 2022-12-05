@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'org.kang.assignment'
-version '1.0-SNAPSHOT'
+version '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 configurations {
@@ -40,9 +40,9 @@ dependencies {
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.1.0'
+    implementation 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
-    compileOnly 'com.h2database:h2'
 
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "javax.persistence:javax.persistence-api"
