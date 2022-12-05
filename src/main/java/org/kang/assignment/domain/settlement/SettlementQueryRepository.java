@@ -1,5 +1,7 @@
 package org.kang.assignment.domain.settlement;
 
+import java.util.Optional;
+
 public interface SettlementQueryRepository {
 
     Long findNewbieByPeriod(String from, String to);
@@ -13,5 +15,7 @@ public interface SettlementQueryRepository {
     Long findSalesByPeriod(String from, String to);
 
     boolean existsByTime(String time);
+
+    Optional<Settlement> findByTime(String time);
 
 }

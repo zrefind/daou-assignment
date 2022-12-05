@@ -7,6 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.kang.assignment.common.exception.CustomException;
+import org.kang.assignment.common.exception.ErrorCode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -70,6 +72,26 @@ public class Settlement {
                 used,
                 sales
         );
+    }
+
+    public void updateNewbie(Long newbie) {
+        this.newbie = newbie;
+    }
+
+    public void updateBolter(Long bolter) {
+        this.bolter = bolter;
+    }
+
+    public void updatePayment(Long payment) {
+        this.payment = payment;
+    }
+
+    public void updateUsed(Long used) {
+        this.used = used;
+    }
+
+    public void updateSales(Long sales) {
+        this.sales = sales;
     }
 
 }

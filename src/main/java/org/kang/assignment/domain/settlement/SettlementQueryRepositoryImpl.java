@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.kang.assignment.domain.settlement.QSettlement.settlement;
 
@@ -74,6 +75,15 @@ public class SettlementQueryRepositoryImpl implements SettlementQueryRepository 
     @Override
     public boolean existsByTime(String time) {
         return Objects.nonNull(
+                queryFactory.selectFrom(settlement)
+                        .where(settlement.time.eq(LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyyMMddHH"))))
+                        .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Settlement> findByTime(String time) {
+        return Optional.ofNullable(
                 queryFactory.selectFrom(settlement)
                         .where(settlement.time.eq(LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyyMMddHH"))))
                         .fetchOne()

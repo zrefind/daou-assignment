@@ -32,6 +32,7 @@ public enum ErrorCode {
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "duplicated member email ..."),
     DISCREPANT_PASSWORD(HttpStatus.FORBIDDEN, "discrepant password ..."),
 
+    SETTLEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "settlement not found ..."),
     DUPLICATED_SETTLEMENT(HttpStatus.CONFLICT, "duplicated settlement ..."),
     ;
 

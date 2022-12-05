@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Service
 public class SettlementService {
@@ -53,6 +55,31 @@ public class SettlementService {
         settlementRepository.save(settlement);
 
         logger.info("success to save settlement: {}", settlement.getTime());
+        return SettlementResponse.done(settlement);
+    }
+
+    @Transactional
+    public SettlementResponse correction(SettlementRequest request) {
+        Validator.validateTime(request.getTime());
+        Validator.ifNonNullValidatePositive(request.getNewbie(), request.getBolter(), request.getPayment(), request.getUsed(), request.getSales());
+
+        Settlement settlement = settlementRepository.findByTime(request.getTime())
+                .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_NOT_FOUND));
+
+        if (Objects.nonNull(request.getNewbie()))
+            settlement.updateNewbie(request.getNewbie());
+        if (Objects.nonNull(request.getBolter()))
+            settlement.updateBolter(request.getBolter());
+        if (Objects.nonNull(request.getPayment()))
+            settlement.updatePayment(request.getPayment());
+        if (Objects.nonNull(request.getUsed()))
+            settlement.updateUsed(request.getUsed());
+        if (Objects.nonNull(request.getSales()))
+            settlement.updateSales(request.getSales());
+
+        settlementRepository.save(settlement);
+
+        logger.info("success to update settlement: {}", settlement.getTime());
         return SettlementResponse.done(settlement);
     }
 
