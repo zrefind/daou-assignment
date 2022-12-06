@@ -11,6 +11,7 @@ public enum ErrorCode {
     BUCKET_HAS_EXHAUSTED(HttpStatus.TOO_MANY_REQUESTS, "bucket has exhausted ..."),
     MISSING_REQUIRED(HttpStatus.BAD_REQUEST, "missing required ..."),
     CAN_NOT_READ_FILE(HttpStatus.BAD_REQUEST, "can not read file ..."),
+    UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST, "unsupported file type ..."),
 
     INVALID_FACTOR(HttpStatus.BAD_REQUEST, "invalid factor ..."),
     INVALID_PERIOD(HttpStatus.BAD_REQUEST, "invalid period ..."),

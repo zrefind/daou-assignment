@@ -17,7 +17,6 @@ import java.io.File;
 @Component
 public class SettlementScheduler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SettlementScheduler.class);
     private static final String CRON_EXP = "0 0 0 * * *";
 
     private final SettlementSchedulerService settlementSchedulerService;
@@ -44,7 +43,7 @@ public class SettlementScheduler {
                 settlementSchedulerService.saveAllToDb(SettlementParser.txtToSettlement(file));
                 break;
             default:
-                logger.error("unsupported file type ...");
+                throw new CustomException(ErrorCode.UNSUPPORTED_FILE_TYPE);
         }
     }
 
