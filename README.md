@@ -28,18 +28,79 @@ $ java -jar daou-assignment-0.0.1-SNAPSHOT.jar -Djava.net.preferIPv4Stack=true
 
 # API 명세
 
-### 인증 관련
+### 회원가입
+| 메서드  | URI               | 출력 포맷 | 비고                                                           |
+|:-----|:------------------|:-----:|:-------------------------------------------------------------|
+| POST | /api/auth/sign-up | JSON  | 테스트 편의를 위해 `admin@test.com / 1q2w3e4r!` 회원정보가 DB에 저장되어 있습니다. |
+```json
+// 입력 예시
+{
+  "email": "tester@test.com",
+  "password": "1q2w3e4r!",
+  "passwordConfirm": "1q2w3e4r!"
+}
+```
 
-| 메서드  | URI               | 설명   | 출력 포맷  | 입력 예시                                                                                   | 비고  |
-|:-----|:------------------|:-----|:------:|:----------------------------------------------------------------------------------------|:----|
-| POST | /api/auth/sign-up | 회원가입 |  JSON  | { "email": "tester@test.com", "password": "1q2w3e4r!", "passwordConfirm": "1q2w3e4r!" } ||
-| POST | /api/auth/sign-in | 로그인  |  JSON  | { "email": "tester@test.com", "password": "1q2w3e4r!" }                                 ||
+### 로그인
+| 메서드  | URI               | 출력 포맷 | 비고                                                           |
+|:-----|:------------------|:-----:|:-------------------------------------------------------------|
+| POST | /api/auth/sign-in | JSON  | 테스트 편의를 위해 `admin@test.com / 1q2w3e4r!` 회원정보가 DB에 저장되어 있습니다. |
+```json
+// 입력 예시
+{
+  "email": "admin@test.com",
+  "password": "1q2w3e4r!"
+}
+```
 
-### 결산 관련
+### 시간대별 결산 항목 조회
+| 메서드 | URI                                         | 출력 포맷 | 비고                                                                                                                                                    |
+|:----|:--------------------------------------------|:-----:|:------------------------------------------------------------------------------------------------------------------------------------------------------|
+| GET | /api/settlement/search/{factor}/{from}/{to} | JSON  | 1. `factor` `from` `to` 모두 필수값입니다.<br>2. `factor`값은 newbie, bolter, payment, used, sales 중 택1하여 입력합니다.<br>3. `from` `to`는 `yyyyMMddHH` 형식으로 입력해야 합니다. |
+```text
+* 입력 예시
+http://localhost:8080/api/settlement/search/newbie/2022113000/2022113010
+```
 
-| 메서드    | URI                                         | 설명         | 출력 포맷 | 입력 예시                                                                                                                                    | 비고                                                                                   |
-|:-------|:--------------------------------------------|:-----------|:-----:|:-----------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
-| GET    | /api/settlement/search/{factor}/{from}/{to} | 시간대별 항목 조회 | JSON  | `factor`: newbie(가입자) / bolter(탈퇴자) / payment(결제 금액) / used(사용 금액) / sales(매출 금액) 중 택1<br>`from`: 조회할 시간대의 시작 시간<br>`to`: 조회할 시간대의 종료 시간 | 1. `factor` `from` `to` 모두 필수값입니다.<br> 2. `from` `to` 값은 `yyyyMMddHH` 형식으로 입력해야 합니다. |
-| POST   | /api/settlement/enrollment                  | 시간대별 항목 입력 | JSON  | { "time": "2022113000", "newbie": 1, "bolter": 2, "payment": 3, "used": 4, "sales": 5 }                                                  | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다.                                          |
-| PUT    | /api/settlement/correction                  | 시간대별 항목 수정 | JSON  | { "time": "2022113000", "newbie": 1, "bolter": 2, "payment": 3, "used": 4, "sales": 5 }                                                  | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다.                                          |
-| DELETE | /api/settlement/elimination                 | 시간대별 항목 삭제 | JSON  | { "time": "2022113000" }                                                                                                                 | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다.                                          |
+### 시간대별 결산 항목 입력
+| 메서드  | URI                        | 출력 포맷 | 비고                                          |
+|:-----|:---------------------------|:-----:|:--------------------------------------------|
+| POST | /api/settlement/enrollment | JSON  | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다. |
+```json
+// 입력 예시
+{
+  "time": "2022113000",
+  "newbie": 1,
+  "bolter": 2,
+  "payment": 3,
+  "used": 4,
+  "sales": 5
+}
+```
+
+### 시간대별 결산 항목 수정
+| 메서드 | URI                        | 출력 포맷 | 비고                                          |
+|:----|:---------------------------|:-----:|:--------------------------------------------|
+| PUT | /api/settlement/correction | JSON  | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다. |
+```json
+// 입력 예시
+{
+  "time": "2022113000",
+  "newbie": 1,
+  "bolter": 2,
+  "payment": 3,
+  "used": 4,
+  "sales": 5
+}
+```
+
+### 시간대별 결산 항목 삭제
+| 메서드    | URI                         | 출력 포맷 | 비고                                          |
+|:-------|:----------------------------|:-----:|:--------------------------------------------|
+| DELETE | /api/settlement/elimination | JSON  | `time` 값은 `yyyyMMddHH` 형식으로 입력해야 하며 필수값입니다. |
+```json
+// 입력 예시
+{
+  "time": "2022113000"
+}
+```
