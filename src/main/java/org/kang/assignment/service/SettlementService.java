@@ -62,6 +62,7 @@ public class SettlementService {
     public SettlementResponse correction(SettlementRequest request) {
         Validator.validateTime(request.getTime());
         Validator.ifNonNullValidatePositive(request.getNewbie(), request.getBolter(), request.getPayment(), request.getUsed(), request.getSales());
+        Validator.ifWholeIsNullThenThrowException(request.getNewbie(), request.getBolter(), request.getPayment(), request.getUsed(), request.getSales());
 
         Settlement settlement = settlementRepository.findByTime(request.getTime())
                 .orElseThrow(() -> new CustomException(ErrorCode.SETTLEMENT_NOT_FOUND));

@@ -174,4 +174,17 @@ public class ValidatorTest {
         }
     }
 
+    @Test
+    @DisplayName("입력된_모든_정수값이_null인지_판별")
+    public void ifWholeIsNullThenThrowException() {
+        Validator.ifWholeIsNullThenThrowException(0L, 1L, 2L);
+        Validator.ifNonNullValidatePositive(null, 1L, 2L);
+
+        try {
+            Validator.ifNonNullValidatePositive(null, null, null);
+        } catch (CustomException e) {
+            assertEquals(ErrorCode.MUST_NON_NULL_AT_LEAST_ONE, e.getErrorCode());
+        }
+    }
+
 }

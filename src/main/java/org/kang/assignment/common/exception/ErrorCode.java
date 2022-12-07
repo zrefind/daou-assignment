@@ -12,6 +12,7 @@ public enum ErrorCode {
     MISSING_REQUIRED(HttpStatus.BAD_REQUEST, "missing required ..."),
     CAN_NOT_READ_FILE(HttpStatus.BAD_REQUEST, "can not read file ..."),
     UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST, "unsupported file type ..."),
+    MUST_NON_NULL_AT_LEAST_ONE(HttpStatus.BAD_REQUEST, "must non null at least one ..."),
 
     INVALID_FACTOR(HttpStatus.BAD_REQUEST, "invalid factor ..."),
     INVALID_PERIOD(HttpStatus.BAD_REQUEST, "invalid period ..."),

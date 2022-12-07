@@ -45,6 +45,19 @@ public class Validator {
         }
     }
 
+    public static void ifWholeIsNullThenThrowException(Long... numbers) {
+        int length = numbers.length;
+        int temp = 0;
+
+        for (Long number : numbers) {
+            if (number == null)
+                temp++;
+        }
+
+        if (length == temp)
+            throw new CustomException(ErrorCode.MUST_NON_NULL_AT_LEAST_ONE);
+    }
+
     private static void isValidString(Pattern pattern, String target, ErrorCode errorCode) {
         if (!StringUtils.hasText(target))
             throw new CustomException(ErrorCode.MISSING_REQUIRED);
