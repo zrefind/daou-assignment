@@ -28,7 +28,7 @@ public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    private final Bucket bucket = RateLimiter.generateSimpleBucket();
+    private final Bucket bucket = RateLimiter.getBucket();
     private final AuthService authService;
 
     @PostMapping("/sign-up")

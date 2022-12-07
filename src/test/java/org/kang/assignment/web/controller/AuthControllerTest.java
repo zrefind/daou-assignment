@@ -16,7 +16,6 @@ import org.kang.assignment.web.dto.auth.AuthRequest;
 import org.kang.assignment.web.dto.auth.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,9 +35,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private WebApplicationContext context;
 
@@ -48,15 +44,14 @@ public class AuthControllerTest {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
-    private MockMvc mvc;
-
-    private final String baseUri = "http://localhost:" + port + "/api/auth";
-    private final String signUpUri = baseUri + "/sign-up";
-    private final String signInUri = baseUri + "/sign-in";
-
+    private static final String BASE_URI = "/api/auth";
+    private static final String SIGN_UP_URI = BASE_URI + "/sign-up";
+    private static final String SIGN_IN_URI = BASE_URI + "/sign-in";
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "1q2w3e4r!";
     private static final String PASSWORD_CONFIRM = "1q2w3e4r!";
+
+    private MockMvc mvc;
 
     @BeforeEach
     public void init() {
@@ -75,7 +70,7 @@ public class AuthControllerTest {
                 .passwordConfirm(PASSWORD_CONFIRM)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(post(signUpUri)
+        MvcResult mvcResult = mvc.perform(post(SIGN_UP_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -99,7 +94,7 @@ public class AuthControllerTest {
                 .passwordConfirm(PASSWORD_CONFIRM)
                 .build();
 
-        mvc.perform(post(signUpUri)
+        mvc.perform(post(SIGN_UP_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_EMAIL));
@@ -115,7 +110,7 @@ public class AuthControllerTest {
                 .passwordConfirm("0123456789!")
                 .build();
 
-        mvc.perform(post(signUpUri)
+        mvc.perform(post(SIGN_UP_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DISCREPANT_PASSWORD));
@@ -130,7 +125,7 @@ public class AuthControllerTest {
                 .password(PASSWORD)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(post(signInUri)
+        MvcResult mvcResult = mvc.perform(post(SIGN_IN_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -166,7 +161,7 @@ public class AuthControllerTest {
                 .password(PASSWORD)
                 .build();
 
-        mvc.perform(post(signInUri)
+        mvc.perform(post(SIGN_IN_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.MEMBER_NOT_FOUND));
@@ -181,7 +176,7 @@ public class AuthControllerTest {
                 .password("0123456789!")
                 .build();
 
-        mvc.perform(post(signInUri)
+        mvc.perform(post(SIGN_IN_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DISCREPANT_PASSWORD));

@@ -14,7 +14,6 @@ import org.kang.assignment.web.dto.settlement.SettlementRequest;
 import org.kang.assignment.web.dto.settlement.SettlementResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,28 +34,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SettlementControllerTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private WebApplicationContext context;
 
     @Autowired
     private SettlementRepository settlementRepository;
 
-    private MockMvc mvc;
-
-    private final String baseUri = "http://localhost:" + port + "/api/settlement";
-    private final String findNewbieByPeriodUri = baseUri + "/search/newbie/2022113001/2022113010";
-    private final String findBolterByPeriodUri = baseUri + "/search/bolter/2022113001/2022113010";
-    private final String findPaymentByPeriodUri = baseUri + "/search/payment/2022113001/2022113010";
-    private final String findUsedByPeriodUri = baseUri + "/search/used/2022113001/2022113010";
-    private final String findSalesByPeriodUri = baseUri + "/search/sales/2022113001/2022113010";
-    private final String enrollmentUri = baseUri + "/enrollment";
-    private final String correctionUri = baseUri + "/correction";
-    private final String eliminationUri = baseUri + "/elimination";
-
+    private static final String BASE_URI = "/api/settlement";
+    private static final String FIND_NEWBIE_BY_PERIOD_URI = BASE_URI + "/search/newbie/2022113001/2022113010";
+    private static final String FIND_BOLTER_BY_PERIOD_URI = BASE_URI + "/search/bolter/2022113001/2022113010";
+    private static final String FIND_PAYMENT_BY_PERIOD_URI = BASE_URI + "/search/payment/2022113001/2022113010";
+    private static final String FIND_USED_BY_PERIOD_URI = BASE_URI + "/search/used/2022113001/2022113010";
+    private static final String FIND_SALES_BY_PERIOD_URI = BASE_URI + "/search/sales/2022113001/2022113010";
+    private static final String ENROLLMENT_URI = BASE_URI + "/enrollment";
+    private static final String CORRECTION_URI = BASE_URI + "/correction";
+    private static final String ELIMINATION_URI = BASE_URI + "/elimination";
     private static final String TIME = "2022010100";
+
+    private MockMvc mvc;
 
     @BeforeEach
     public void init() {
@@ -70,7 +65,7 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_가입자_수_조회")
     public void findNewbieByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findNewbieByPeriodUri))
+        MvcResult mvcResult = mvc.perform(get(FIND_NEWBIE_BY_PERIOD_URI))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -84,7 +79,7 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_탈퇴자_수_조회")
     public void findBolterByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findBolterByPeriodUri))
+        MvcResult mvcResult = mvc.perform(get(FIND_BOLTER_BY_PERIOD_URI))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -98,7 +93,7 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_결제_금액_조회")
     public void findPaymentByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findPaymentByPeriodUri))
+        MvcResult mvcResult = mvc.perform(get(FIND_PAYMENT_BY_PERIOD_URI))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -112,7 +107,7 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_사용_금액_조회")
     public void findUsedByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findUsedByPeriodUri))
+        MvcResult mvcResult = mvc.perform(get(FIND_USED_BY_PERIOD_URI))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -126,7 +121,7 @@ public class SettlementControllerTest {
     @Transactional(readOnly = true)
     @DisplayName("시간대별_매출_금액_조회")
     public void findSalesByPeriod() throws Exception {
-        MvcResult mvcResult = mvc.perform(get(findSalesByPeriodUri))
+        MvcResult mvcResult = mvc.perform(get(FIND_SALES_BY_PERIOD_URI))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -147,7 +142,7 @@ public class SettlementControllerTest {
                 .sales(123000L)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(post(enrollmentUri)
+        MvcResult mvcResult = mvc.perform(post(ENROLLMENT_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -174,7 +169,7 @@ public class SettlementControllerTest {
                 .sales(123000L)
                 .build();
 
-        mvc.perform(post(enrollmentUri)
+        mvc.perform(post(ENROLLMENT_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.DUPLICATED_SETTLEMENT));
@@ -207,7 +202,7 @@ public class SettlementControllerTest {
                 .sales(1L)
                 .build();
 
-        MvcResult mvcResult = mvc.perform(put(correctionUri)
+        MvcResult mvcResult = mvc.perform(put(CORRECTION_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -236,7 +231,7 @@ public class SettlementControllerTest {
                 .sales(1L)
                 .build();
 
-        mvc.perform(put(correctionUri)
+        mvc.perform(put(CORRECTION_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.SETTLEMENT_NOT_FOUND));
@@ -254,7 +249,7 @@ public class SettlementControllerTest {
                 .time("2022113000")
                 .build();
 
-        MvcResult mvcResult = mvc.perform(delete(eliminationUri)
+        MvcResult mvcResult = mvc.perform(delete(ELIMINATION_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andReturn();
@@ -276,7 +271,7 @@ public class SettlementControllerTest {
                 .time("2022103000")
                 .build();
 
-        mvc.perform(delete(eliminationUri)
+        mvc.perform(delete(ELIMINATION_URI)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(result -> TestUtil.expectCustomException(result, ErrorCode.SETTLEMENT_NOT_FOUND));

@@ -20,7 +20,7 @@ public class SettlementController {
 
     private static final Logger logger = LoggerFactory.getLogger(SettlementController.class);
 
-    private final Bucket bucket = RateLimiter.generateSimpleBucket();
+    private final Bucket bucket = RateLimiter.getBucket();
     private final SettlementService settlementService;
 
     @GetMapping("/search/{factor}/{from}/{to}")
