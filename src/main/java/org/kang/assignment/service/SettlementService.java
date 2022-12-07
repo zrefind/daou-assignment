@@ -24,20 +24,20 @@ public class SettlementService {
     private final SettlementRepository settlementRepository;
 
     @Transactional(readOnly = true)
-    public Long findByPeriod(String factor, String from, String to) {
+    public SettlementResponse findByPeriod(String factor, String from, String to) {
         Validator.validatePeriod(from, to);
 
         switch (factor) {
             case "newbie":
-                return settlementRepository.findNewbieByPeriod(from, to);
+                return SettlementResponse.done(settlementRepository.findNewbieByPeriod(from, to));
             case "bolter":
-                return settlementRepository.findBolterByPeriod(from, to);
+                return SettlementResponse.done(settlementRepository.findBolterByPeriod(from, to));
             case "payment":
-                return settlementRepository.findPaymentByPeriod(from, to);
+                return SettlementResponse.done(settlementRepository.findPaymentByPeriod(from, to));
             case "used":
-                return settlementRepository.findUsedByPeriod(from, to);
+                return SettlementResponse.done(settlementRepository.findUsedByPeriod(from, to));
             case "sales":
-                return settlementRepository.findSalesByPeriod(from, to);
+                return SettlementResponse.done(settlementRepository.findSalesByPeriod(from, to));
             default:
                 throw new CustomException(ErrorCode.INVALID_FACTOR);
         }

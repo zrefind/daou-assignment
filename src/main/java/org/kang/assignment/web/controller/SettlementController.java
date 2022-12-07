@@ -24,7 +24,7 @@ public class SettlementController {
     private final SettlementService settlementService;
 
     @GetMapping("/search/{factor}/{from}/{to}")
-    public ResponseEntity<Long> findByPeriod(@PathVariable String factor, @PathVariable String from, @PathVariable String to) {
+    public ResponseEntity<SettlementResponse> findByPeriod(@PathVariable String factor, @PathVariable String from, @PathVariable String to) {
         if (bucket.tryConsume(1)) {
             logger.debug("bucket remains: {}", bucket.getAvailableTokens());
             return ResponseEntity.ok(settlementService.findByPeriod(factor, from, to));

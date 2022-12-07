@@ -70,8 +70,8 @@ public class SettlementControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Long response = TestUtil.convert(mvcResult, Long.class);
-        assertTrue(response > -1L);
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
     }
 
     @Test
@@ -84,8 +84,8 @@ public class SettlementControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Long response = TestUtil.convert(mvcResult, Long.class);
-        assertTrue(response > -1L);
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
     }
 
     @Test
@@ -98,8 +98,8 @@ public class SettlementControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Long response = TestUtil.convert(mvcResult, Long.class);
-        assertTrue(response > -1L);
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
     }
 
     @Test
@@ -112,8 +112,8 @@ public class SettlementControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Long response = TestUtil.convert(mvcResult, Long.class);
-        assertTrue(response > -1L);
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
     }
 
     @Test
@@ -126,8 +126,8 @@ public class SettlementControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Long response = TestUtil.convert(mvcResult, Long.class);
-        assertTrue(response > -1L);
+        SettlementResponse response = TestUtil.convert(mvcResult, SettlementResponse.class);
+        assertEquals(ResponseType.DONE, response.getResponseType());
     }
 
     @Test

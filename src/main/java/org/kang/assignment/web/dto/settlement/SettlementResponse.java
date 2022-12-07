@@ -21,6 +21,12 @@ public class SettlementResponse extends Response {
     private Long payment;
     private Long used;
     private Long sales;
+    private Long searchResult;
+
+    public SettlementResponse(ResponseType responseType, Long searchResult) {
+        super(responseType);
+        this.searchResult = searchResult;
+    }
 
     private SettlementResponse(ResponseType responseType, String time, Long newbie, Long bolter, Long payment, Long used, Long sales) {
         super(responseType);
@@ -30,6 +36,10 @@ public class SettlementResponse extends Response {
         this.payment = payment;
         this.used = used;
         this.sales = sales;
+    }
+
+    public static SettlementResponse done(Long searchResult) {
+        return new SettlementResponse(ResponseType.DONE, searchResult);
     }
 
     public static SettlementResponse done(Settlement settlement) {
