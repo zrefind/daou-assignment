@@ -24,7 +24,7 @@ public class RateLimiterTest {
     @Autowired
     private WebApplicationContext context;
 
-    private static final long MAX_BANDWIDTH = RateLimiter.getBucket().getAvailableTokens();
+    private static final long MAX_BANDWIDTH = 60;
     private static final String BASE_URI = "/api/settlement";
     private static final String FIND_NEWBIE_BY_PERIOD_URI = BASE_URI + "/search/newbie/2022113001/2022113010";
 

@@ -1,18 +1,21 @@
-package org.kang.assignment.util;
+package org.kang.assignment.config;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 
-public class RateLimiter {
+@Configuration
+public class RateLimiterConfig {
 
     private static final int MAX_BANDWIDTH = 60;
     private static final int MINUTES_TOKEN_REFILL = 1;
-    private static final Bucket BUCKET = Bucket.builder().addLimit(getSimpleBandwidth()).build();
 
-    public static Bucket getBucket() {
-        return BUCKET;
+    @Bean
+    public static Bucket bucket() {
+        return Bucket.builder().addLimit(getSimpleBandwidth()).build();
     }
 
     private static Bandwidth getSimpleBandwidth() {

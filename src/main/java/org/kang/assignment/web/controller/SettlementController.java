@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.kang.assignment.common.exception.CustomException;
 import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.service.SettlementService;
-import org.kang.assignment.util.RateLimiter;
 import org.kang.assignment.web.dto.settlement.SettlementRequest;
 import org.kang.assignment.web.dto.settlement.SettlementResponse;
 import org.slf4j.Logger;
@@ -20,7 +19,7 @@ public class SettlementController {
 
     private static final Logger logger = LoggerFactory.getLogger(SettlementController.class);
 
-    private final Bucket bucket = RateLimiter.getBucket();
+    private final Bucket bucket;
     private final SettlementService settlementService;
 
     @GetMapping("/search/{factor}/{from}/{to}")

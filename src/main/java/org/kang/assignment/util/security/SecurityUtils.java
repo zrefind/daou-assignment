@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
 
 public class SecurityUtils {
 

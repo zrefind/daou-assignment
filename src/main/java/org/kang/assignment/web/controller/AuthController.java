@@ -7,7 +7,6 @@ import org.kang.assignment.common.exception.CustomException;
 import org.kang.assignment.common.exception.ErrorCode;
 import org.kang.assignment.common.jwt.Jwt;
 import org.kang.assignment.service.AuthService;
-import org.kang.assignment.util.RateLimiter;
 import org.kang.assignment.web.dto.auth.AuthRequest;
 import org.kang.assignment.web.dto.auth.AuthResponse;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    private final Bucket bucket = RateLimiter.getBucket();
+    private final Bucket bucket;
     private final AuthService authService;
 
     @PostMapping("/sign-up")
