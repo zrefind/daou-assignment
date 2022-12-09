@@ -14,13 +14,13 @@ $ git clone https://github.com/zrefind/daou-assignment.git
 $ cd daou-assignment
 $ vim src/main/resources/application.properties
 ```
-| 옵션명            | 설명                          | 예시                                                                | 비고                                                                     |
-|:---------------|:----------------------------|:------------------------------------------------------------------|:-----------------------------------------------------------------------|
-| server.port    | 웹 서버 포트                     | 8080                                                              |                                                                        |
-| target.dir     | 스케줄러가 읽을 파일이 있는 디렉토리의 절대 경로 | `Linux`: /opt/daou/files<br>`Windows`: C:\\\Users\\\user\\\files  | 이 옵션값에 해당하는 경로가 반드시 존재해야 합니다                                           |
-| target.file    | 스케줄러가 읽을 파일명                | sample.csv                                                        | src/main/resources 하위에 테스트에서 사용한<br>`sample.csv` `sample.txt` 파일이 있습니다 |
-| allowed.ip     | 접근을 허용할 IP                  | 127.0.0.1,0:0:0:0:0:0:0:1                                         | 콤마(,)를 통해 각 IP를 구분하여 입력합니다                                             |
-| log.config.dir | API가 생성하는 로그를 저장할 파일의 절대 경로 | `Linux`: /Users/kang/logs<br>`Windows`: C:\\\Users\\\user\\\logs  ||
+| 옵션명         | 설명                          | 예시                                                                | 비고                                                                                                                            |
+|:------------|:----------------------------|:------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------|
+| server.port | 웹 서버 포트                     | 8080                                                              |                                                                                                                               |
+| target.dir  | 스케줄러가 읽을 파일이 있는 디렉토리의 절대 경로 | `Linux`: /opt/daou/files<br>`Windows`: C:\\\Users\\\user\\\files  | 이 옵션값에 해당하는 경로가 반드시 존재해야 합니다                                                                                                  |
+| target.file | 스케줄러가 읽을 파일명                | sample.csv                                                        | 1. 이 옵션값에 해당하는 파일이 `target.dir` 경로에 반드시 존재해야 합니다<br>2. src/main/resources 하위에 테스트에서 사용한<br>`sample.csv` `sample.txt` 파일이 있습니다 |
+| allowed.ip  | 접근을 허용할 IP                  | 127.0.0.1,0:0:0:0:0:0:0:1                                         | 콤마(,)를 통해 각 IP를 구분하여 입력합니다                                                                                                    |
+| log.dir     | API가 생성하는 로그를 저장할 파일의 절대 경로 | `Linux`: /Users/kang/logs<br>`Windows`: C:\\\Users\\\user\\\logs  ||
 
 ### 3. 애플리케이션 빌드 및 구동
 ```shell
@@ -38,6 +38,15 @@ $ java -jar daou-assignment-0.0.1-SNAPSHOT.jar -Djava.net.preferIPv4Stack=true
    - 접근 허용 IP를 IPv6로 사용하려면 애플리케이션을 실행할 때 `-Djava.net.preferIPv6Stack=true` 옵션을 적용합니다.
    - `application.properties` 파일의 `allowed.ip` 옵션의 값을 설정할 때 IPv4, IPv6 정보를 모두 입력하는 것을 권장합니다.
      - 소스를 처음 내려받으면 해당 옵션의 값이 `127.0.0.1,0:0:0:0:0:0:0:1`로 설정되어 있습니다.
+
+### 4. H2 DB Console 접속 URL 및 테스트 데이터 관련 참고사항
+   - H2 DB Console 접속 URL: `http://localhost:{server.port}/h2-console`
+   - 애플리케이션이 구동되면 테스트 편의를 위한 데이터가 DB에 입력됩니다. (`src/main/resources/test.sql` 참조)
+     - `MEMBER`
+       - 계정/패스워드 정보가 `admin@test.com / 1q2w3e4r!`인 데이터가 추가됩니다.
+       - API 테스트 시 해당 계정 정보로 사용자 인증을 할 수 있습니다.
+     - `SETTLEMENT`
+       - 2022년 11월 30일의 결산 데이터가 추가됩니다.
 
 # API 명세
 
