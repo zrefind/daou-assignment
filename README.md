@@ -61,6 +61,12 @@ $ java -jar daou-assignment-0.0.1-SNAPSHOT.jar -Djava.net.preferIPv4Stack=true
   "password": "1q2w3e4r!",
   "passwordConfirm": "1q2w3e4r!"
 }
+// 응답 예시
+{
+  "responseType": "DONE",
+  "email": "test@test.com",
+  "jwt": null
+}
 ```
 
 ### 로그인
@@ -73,15 +79,32 @@ $ java -jar daou-assignment-0.0.1-SNAPSHOT.jar -Djava.net.preferIPv4Stack=true
   "email": "admin@test.com",
   "password": "1q2w3e4r!"
 }
+// 응답 예시
+{
+  "responseType": "DONE",
+  "email": "admin@test.com",
+  "jwt": null
+}
 ```
 
 ### 시간대별 결산 항목 조회
 | 메서드 | URI                                         | 출력 포맷 | 비고                                                                                                                                                    |
 |:----|:--------------------------------------------|:-----:|:------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GET | /api/settlement/search/{factor}/{from}/{to} | JSON  | 1. `factor` `from` `to` 모두 필수값입니다.<br>2. `factor`값은 newbie, bolter, payment, used, sales 중 택1하여 입력합니다.<br>3. `from` `to`는 `yyyyMMddHH` 형식으로 입력해야 합니다. |
-```text
-* 입력 예시
+```json lines
+// 입력 예시
 http://localhost:8080/api/settlement/search/newbie/2022113000/2022113010
+// 응답 예시
+{
+  "responseType": "DONE",
+  "time": null,
+  "newbie": null,
+  "bolter": null,
+  "payment": null,
+  "used": null,
+  "sales": null,
+  "searchResult": 310
+}
 ```
 
 ### 시간대별 결산 항목 입력
@@ -91,12 +114,23 @@ http://localhost:8080/api/settlement/search/newbie/2022113000/2022113010
 ```json lines
 // 입력 예시
 {
-  "time": "2022113000",
+  "time": "2022110100",
   "newbie": 1,
   "bolter": 2,
   "payment": 3,
   "used": 4,
   "sales": 5
+}
+// 응답 예시
+{
+  "responseType": "DONE",
+  "time": "2022-11-01 00",
+  "newbie": 1,
+  "bolter": 2,
+  "payment": 3,
+  "used": 4,
+  "sales": 5,
+  "searchResult": null
 }
 ```
 
@@ -114,6 +148,17 @@ http://localhost:8080/api/settlement/search/newbie/2022113000/2022113010
   "used": 4,
   "sales": 5
 }
+// 응답 예시
+{
+  "responseType": "DONE",
+  "time": "2022-11-30 00",
+  "newbie": 1,
+  "bolter": 2,
+  "payment": 3,
+  "used": 4,
+  "sales": 5,
+  "searchResult": null
+}
 ```
 
 ### 시간대별 결산 항목 삭제
@@ -124,5 +169,16 @@ http://localhost:8080/api/settlement/search/newbie/2022113000/2022113010
 // 입력 예시
 {
   "time": "2022113000"
+}
+// 응답 예시
+{
+  "responseType": "DONE",
+  "time": "2022-11-30 00",
+  "newbie": 1,
+  "bolter": 2,
+  "payment": 3,
+  "used": 4,
+  "sales": 5,
+  "searchResult": null
 }
 ```
